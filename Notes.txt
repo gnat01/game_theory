@@ -1,0 +1,1 @@
+Many game theory ideas in R and python mainly, with a sprinkling of Matlab and C
