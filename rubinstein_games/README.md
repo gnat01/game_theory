@@ -1,7 +1,5 @@
 # rubinstein_games
 
-Yes: `rubinstein_games` is a sensible directory name for this little project.
-
 This script does four things in one place:
 
 1. Computes the exact Rubinstein fixed point.
@@ -222,3 +220,89 @@ python rubinstein_breakdown_game_animated.py \
   \[
   (1-p)^2 \delta_A \delta_B
   \]
+
+
+---
+
+## Interacting population game
+
+Added script:
+
+- `rubinstein_breakdown_game_populations.py`
+
+### Idea
+
+We now move from independent pairs to a **genuine population game** via **evolutionary imitation**.
+
+Each epoch:
+
+1. Every pair runs `micro_steps` of Rubinstein-with-breakdown two-step dynamics.
+2. Each pair is scored based on outcomes.
+3. Bottom-performing pairs imitate top-performing pairs (with noise).
+
+### Scoring
+
+If A proposes first:
+
+\[
+A\text{-share} = V_A, \quad B\text{-share} = 1 - V_A
+\]
+
+Define:
+
+\[
+\text{balance score} = 1 - |A - B|
+\]
+
+\[
+\text{speed score} = 1 - (1-p)^2 \delta_A \delta_B
+\]
+
+\[
+\text{total score} = w_{balance} \cdot balance + w_{speed} \cdot speed
+\]
+
+### Interaction rule
+
+Learners (bottom fraction) imitate elites (top fraction):
+
+\[
+\theta_i \leftarrow (1-\eta)\theta_i + \eta \theta_{elite} + noise
+\]
+
+for
+
+\[
+\theta \in \{\delta_A, \delta_B, p\}
+\]
+
+Continuation values are also partially copied.
+
+### Run
+
+```bash
+python rubinstein_breakdown_game_populations.py --num-pairs 1000 --epochs 80 --micro-steps 20 --plot-out rb_pop_game.png --animate-out rb_pop_game.gif --csv-out rb_pop_game.csv
+```
+
+Heavier run:
+
+```bash
+python rubinstein_breakdown_game_populations.py --num-pairs 3000 --epochs 120 --micro-steps 20 --top-frac 0.2 --bottom-frac 0.2 --imitation-rate 0.5 --mutation-std 0.02 --plot-out rb_pop_game.png --animate-out rb_pop_game.gif --csv-out rb_pop_game.csv
+```
+
+### Controls
+
+- `--top-frac`, `--bottom-frac`
+- `--imitation-rate`
+- `--mutation-std`, `--value-mutation-std`
+- `--weight-balance`, `--weight-speed`
+
+### Interpretation
+
+This is an **evolutionary bargaining system**:
+
+- bargaining happens within pairs
+- success is evaluated at pair level
+- successful strategies spread through imitation
+
+The continuation-value cloud now evolves due to **both contraction AND population interaction**.
