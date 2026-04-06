@@ -297,6 +297,62 @@ python rubinstein_breakdown_game_populations.py --num-pairs 3000 --epochs 120 --
 - `--mutation-std`, `--value-mutation-std`
 - `--weight-balance`, `--weight-speed`
 
+### Full CLI parameters
+
+Core dynamics:
+- `--epochs`
+- `--micro-steps`
+
+Parameter sampling:
+- `--delta-min`, `--delta-max`
+- `--p-min`, `--p-max`
+- `--v-min`, `--v-max`
+
+Evolution / interaction:
+- `--top-frac`
+- `--bottom-frac`
+- `--imitation-rate`
+- `--mutation-std`
+- `--value-mutation-std`
+
+Scoring:
+- `--weight-balance`
+- `--weight-speed`
+
+Outputs:
+- `--plot-out`
+- `--animate-out`
+- `--csv-out`
+
+Animation:
+- `--fps`
+- `--frame-step`
+
+Misc:
+- `--sample-rows`
+
+### Suggested experiments
+
+Fast collapse (strong selection):
+```bash
+--imitation-rate 0.5 --mutation-std 0.01
+```
+
+Sustained diversity (exploration vs selection):
+```bash
+--imitation-rate 0.1 --mutation-std 0.05
+```
+
+High stability (deep convergence per epoch):
+```bash
+--micro-steps 50 --epochs 50
+```
+
+Noisy evolutionary regime (persistent cloud motion):
+```bash
+--imitation-rate 0.2 --mutation-std 0.08 --value-mutation-std 0.05
+```
+
 ### Interpretation
 
 This is an **evolutionary bargaining system**:
